@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tic-Tac-Toe</title>
+  <link rel="stylesheet" href="game.css">
+</head>
+<body>
+  <div class="game-container">
+    <h1>Tic-Tac-Toe</h1>
+    <div class="board">
+      <div class="row">
+        <div class="cell" data-index="0"></div>
+        <div class="cell" data-index="1"></div>
+        <div class="cell" data-index="2"></div>
+      </div>
+      <div class="row">
+        <div class="cell" data-index="3"></div>
+        <div class="cell" data-index="4"></div>
+        <div class="cell" data-index="5"></div>
+      </div>
+      <div class="row">
+        <div class="cell" data-index="6"></div>
+        <div class="cell" data-index="7"></div>
+        <div class="cell" data-index="8"></div>
+      </div>
+    </div>
+    <button class="reset-button">Restart Game</button>
+    <p class="message"></p>
+  </div>
+
+  <!-- JavaScript code here -->
+  <script>
+    let currentPlayer = 'X'; // Player X goes first
+    let gameBoard = ['', '', '', '', '', '', '', '', '']; // To track game state
+    
+    // Select elements
+    const cells = document.querySelectorAll('.cell');
+    const message = document.querySelector('.message');
+    const resetButton = document.querySelector('.reset-button');
+    
+    // Function to handle clicks on cells
+    cells.forEach(cell => {
+      cell.addEventListener('click', (e) => {
+        const index = e.target.dataset.index;
+        if (gameBoard[index] === '' && !checkWinner()) {
+          gameBoard[index] = currentPlayer;
+          e.target.classList.add(currentPlayer.toLowerCase());
+          e.target.textContent = currentPlayer;
+          
+          if (checkWinner()) {
+            message.textContent = `${currentPlayer} Wins!`;
+          } else if (!gameBoard.includes('')) {
+            message.textContent = 'It\'s a Draw!';
+          } else {
+            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+          }
+        }
+      });
+    });
+    
+    // Function to check if a player has won
+    function checkWinner() {
+      const winPatterns = [
+        [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+        [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+        [0, 4, 8], [2, 4, 6]              // Diagonals
+      ];
+      
+      return winPatterns.some(pattern => {
+        const [a, b, c] = pattern;
+        return gameBoard[a] && gameBoard[a] === gameBoard[b] && gameBoard[a] === gameBoard[c];
+      });
+    }
+    
+    // Function to reset the game
+    resetButton.addEventListener('click', () => {
+      gameBoard = ['', '', '', '', '', '', '', '', ''];
+      cells.forEach(cell => {
+        cell.textContent = '';
+        cell.classList.remove('x', 'o');
+      });
+      currentPlayer = 'X';
+      message.textContent = '';
+    });
+  </script>
+</body>
+</html>
